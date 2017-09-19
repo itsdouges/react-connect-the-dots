@@ -6,16 +6,19 @@ import React from 'react';
 type Props = {
   pair: string,
   children: Node,
-  connector?: () => Node,
+  connector?: ({ [string]: string | number | void | Object }) => Node,
 };
 
 type State = {
-
+  ready: boolean,
 };
 
 const PAIR_STORE = {};
 
 export default class Dot extends React.Component<Props, State> {
+  state: State = {
+    ready: false,
+  };
   props: Props;
   _instance: HTMLElement;
 
@@ -38,8 +41,9 @@ export default class Dot extends React.Component<Props, State> {
     requestAnimationFrame(() => {
       const store = PAIR_STORE[this.props.pair];
       if (store.length === 2) {
-        const [start, end] = store;
-        this.drawConnector(start(), end());
+        this.setState({
+          ready: true,
+        });
         return;
       }
 
@@ -47,8 +51,22 @@ export default class Dot extends React.Component<Props, State> {
     });
   }
 
-  drawConnector (start, end) {
-    console.log(start, end);
+  drawConnector () {
+    if (!this.state.ready || !this.props.connector) {
+      return null;
+    }
+
+    const [startFunc, endFunc] = PAIR_STORE[this.props.pair];
+    const start = startFunc();
+    const end = endFunc();
+
+    const style = {
+      position: 'absolute',
+      left: start.x,
+      top: start.y,
+    };
+
+    return this.props.connector && this.props.connector({ style });
   }
 
   componentWillUnmount () {
@@ -74,8 +92,11 @@ export default class Dot extends React.Component<Props, State> {
   };
 
   render () {
-    return React.cloneElement(this.props.children, {
-      ref: this.supplyRef,
-    });
+    return (
+      <span ref={this.supplyRef}>
+        {this.drawConnector()}
+        {this.props.children}
+      </span>
+    );
   }
 }
