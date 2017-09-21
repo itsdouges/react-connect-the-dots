@@ -6,6 +6,7 @@ import React from 'react';
 type Props = {
   pair: string,
   children: Node,
+  height: number,
   connector?: ({ [string]: string | number | void | Object }) => Node,
 };
 
@@ -15,7 +16,19 @@ type State = {
 
 const PAIR_STORE = {};
 
+export function calculateHypotenuse ({ width, height }: Dimensions) {
+  const x2 = width ** 2;
+  const y2 = height ** 2;
+
+  const hypotenuse = Math.sqrt(x2 + y2);
+  return Math.ceil(hypotenuse);
+}
+
 export default class Dot extends React.Component<Props, State> {
+  static defaultProps = {
+    height: 50,
+  };
+
   state: State = {
     ready: false,
   };
@@ -60,10 +73,23 @@ export default class Dot extends React.Component<Props, State> {
     const start = startFunc();
     const end = endFunc();
 
+    const x = end.left - start.left;
+    const y = start.top - end.top;
+
+    console.log(start, end);
+    console.log(x, y);
+
+    const width = calculateHypotenuse({ width: x, height: y });
+    const rotation = Math.tan(y / x);
+
     const style = {
       position: 'absolute',
-      left: start.x,
-      top: start.y,
+      left: start.left,
+      top: start.top - this.props.height / 2,
+      height: this.props.height,
+      transformOrigin: 'left',
+      width,
+      transform: `rotate(${rotation}deg)`,
     };
 
     return this.props.connector && this.props.connector({ style });
@@ -85,10 +111,7 @@ export default class Dot extends React.Component<Props, State> {
   calculatePosition = () => {
     const { top, left, width, height } = this._instance.getBoundingClientRect();
 
-    const x = top + height / 2;
-    const y = left + width / 2;
-
-    return { x, y };
+    return { top: top + height / 2, left: left + width / 2 };
   };
 
   render () {

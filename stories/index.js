@@ -14,7 +14,7 @@ const SingleLineApp = ({ double }: { double?: boolean }) => (
     </Dot>
 
     <Dot pair="ab" connector={double ? (props) => <div {...props} className="connector-simple" /> : undefined}>
-      <div className="child">2</div>
+      <div className="child move-top">2</div>
     </Dot>
   </div>
 );
