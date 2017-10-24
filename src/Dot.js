@@ -1,14 +1,13 @@
 // @flow
 
-import type { Node } from 'react';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 type Props = {
   pair: string,
-  children: Node,
+  children: any,
   height: number,
-  connector?: ({ [string]: string | number | void | Object }) => Node,
+  connector: ({ [string]: string | number | void | Object }) => any,
 };
 
 type State = {
@@ -51,9 +50,6 @@ export default class Dot extends React.Component<Props, State> {
     ready: false,
   };
 
-  props: Props;
-  _instance: HTMLElement;
-
   getChildContext () {
     return {
       setRef: this.supplyRef,
@@ -79,6 +75,21 @@ export default class Dot extends React.Component<Props, State> {
       });
     }
   }
+
+  componentWillUnmount () {
+    PAIR_STORE[this.props.pair] = PAIR_STORE[this.props.pair]
+      .filter((func) => func === this.calculatePosition);
+
+    if (PAIR_STORE[this.props.pair].length === 0) {
+      delete PAIR_STORE[this.props.pair];
+    }
+
+    this.removeEvent && this.removeEvent();
+  }
+
+  props: Props;
+  _instance: HTMLElement;
+  removeEvent: ?Function;
 
   waitToDrawConnector () {
     requestAnimationFrame(() => {
@@ -118,21 +129,10 @@ export default class Dot extends React.Component<Props, State> {
       transform: `rotate(${deg}deg)`,
     };
 
-    return this.props.connector && this.props.connector({ style });
+    return this.props.connector({ style });
   }
 
-  componentWillUnmount () {
-    PAIR_STORE[this.props.pair] = PAIR_STORE[this.props.pair]
-      .filter((func) => func === this.calculatePosition);
-
-    if (PAIR_STORE[this.props.pair].length === 0) {
-      delete PAIR_STORE[this.props.pair];
-    }
-
-    this.removeEvent && this.removeEvent();
-  }
-
-  supplyRef = (ref: HTMLElement) => {
+  supplyRef = (ref: any) => {
     if (this.context.setRef) {
       this.context.setRef(ref);
     }

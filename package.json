@@ -1,7 +1,7 @@
 {
   "name": "react-connect-the-dots",
   "version": "0.0.0",
-  "description": "Project description.",
+  "description": "Dynamically positions a connector between two React components.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madou/react-connect-the-dots.git"
@@ -10,7 +10,7 @@
   "license": "MIT",
   "keywords": [],
   "main": "index.js",
-  "jsnext:main": "index.es6.js",
+  "jsnext:main": "index.es.js",
   "scripts": {
     "start": "npm run storybook",
     "test": "BABEL_ENV=test npm run lint && npm run flow && npm run cover",
@@ -20,7 +20,7 @@
     "cover": "BABEL_ENV=test nyc npm run unit",
     "flow": "flow .",
     "codecov": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "build": "node tools/build && flow-copy-source src dist --ignore *.spec.js",
+    "build": "rm -rf dist && mkdir dist && node tools/build && flow-copy-source src dist --ignore *.spec.js",
     "prepublish": "npm run build",
     "preversion": "npm test",
     "version": "version-changelog CHANGELOG.md && changelog-verify CHANGELOG.md && git add CHANGELOG.md",
@@ -28,13 +28,12 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "rm -rf docs && build-storybook --output-dir docs"
   },
-  "dependencies": {
-    "prop-types": "^15.6.0",
-    "react": "^15.6.1"
+  "peerDependencies": {
+    "prop-types": ">=15",
+    "react": ">=15"
   },
   "devDependencies": {
     "@storybook/react": "^3.2.13",
-    "app-module-path": "^2.2.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^6.0.4",
@@ -76,7 +75,9 @@
     "lodash": "^4.17.4",
     "mocha": "^3.5.3",
     "nyc": "^11.2.1",
+    "prop-types": "^15.6.0",
     "proxyquire": "^1.8.0",
+    "react": "^15.6.1",
     "react-addons-test-utils": "^15.6.0",
     "react-dom": "^15.6.1",
     "rollup": "^0.49.3",

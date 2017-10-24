@@ -5,12 +5,15 @@
   "exclude": [
     "src/**/*.spec.js",
     "dist",
-    "flow",
     "flow-typed",
     "scripts",
     "test",
     "config",
-    "src/flowTypes.js"
+    "docs",
+    "stories",
+    "tools",
+    "src/flowTypes.js",
+    ".eslintrc.js"
   ],
   "require": [
     "babel-register"

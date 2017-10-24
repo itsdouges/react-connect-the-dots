@@ -1,40 +1,31 @@
 const fs = require('fs');
-const del = require('del');
 const rollup = require('rollup');
 const babel = require('rollup-plugin-babel');
 const pkg = require('../package.json');
 
 let promise = Promise.resolve();
 
-// Clean up the output directory
-promise = promise.then(() => del(['dist/*'])).then(() => {
-  try {
-    fs.statSync('dist');
-  } catch (e) {
-    fs.mkdirSync('dist');
-  }
-});
-
-// Compile source code into a distributable format with Babel
-for (const format of ['es6', 'cjs', 'umd']) {
-  promise = promise.then(() => rollup.rollup({
-    entry: 'src/index.js',
-    external: Object.keys(pkg.dependencies),
-    plugins: [
-      babel(Object.assign(pkg.babel, {
-        babelrc: false,
-        include: '**/**.js',
-        exclude: 'node_modules/**',
-        runtimeHelpers: true,
-        presets: pkg.babel.presets.map((x) => (x === 'es2015' ? 'es2015-rollup' : x)),
-      })),
-    ],
-  }).then((bundle) => bundle.write({
-    dest: `dist/${format === 'cjs' ? 'index' : `index.${format}`}.js`,
-    format,
-    sourceMap: true,
-    moduleName: format === 'umd' ? pkg.name : undefined,
-  })));
+for (const format of ['es', 'cjs', 'umd']) {
+  promise = promise
+    .then(() => rollup.rollup({
+      input: 'src/index.js',
+      external: Object.keys(pkg.peerDependencies),
+      plugins: [
+        babel(Object.assign(pkg.babel, {
+          babelrc: false,
+          include: 'src/**.js',
+          exclude: 'node_modules/**',
+          runtimeHelpers: true,
+          // presets: pkg.babel.presets.map((x) => (x === 'es' ? 'es2015-rollup' : x)),
+        })),
+      ],
+    })
+    .then((bundle) => bundle.write({
+      dest: `dist/${format === 'cjs' ? 'index' : `index.${format}`}.js`,
+      format,
+      sourceMap: true,
+      moduleName: format === 'umd' ? pkg.name : undefined,
+    })));
 }
 
 // Copy package.json and LICENSE.txt
