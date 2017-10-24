@@ -1,19 +1,20 @@
 // @flow
 
 import React from 'react';
-import { storiesOf } from '@kadira/storybook';
+import { storiesOf } from '@storybook/react';
 import Dot from '../src';
-import './styles.less';
+// $FlowFixMe
+import 'style-loader!css-loader!./styles.css';
 
 const MyComponent = (props) => <div {...props} className="connector-simple" />;
 
-const SingleLineApp = ({ double }: { double?: boolean }) => (
+const SingleLineApp = () => (
   <div className="root">
     <Dot pair="ab" connector={(props) => <MyComponent {...props} />}>
       <div className="child">1</div>
     </Dot>
 
-    <Dot pair="ab" connector={double ? (props) => <div {...props} className="connector-simple" /> : undefined}>
+    <Dot pair="ab">
       <div className="child move-top">2</div>
     </Dot>
   </div>
@@ -46,7 +47,8 @@ const MultiLineApp = () => (
   </div>
 );
 
-storiesOf('<Dot />')
-  .add('single line', () => <SingleLineApp />)
-  .add('double line', () => <SingleLineApp double />)
-  .add('multi lines', () => <MultiLineApp />);
+storiesOf('Dot/Single', module)
+  .add('static', () => <SingleLineApp />);
+
+storiesOf('Dot/Multi', module)
+  .add('static', () => <MultiLineApp />);
