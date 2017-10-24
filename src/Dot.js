@@ -2,6 +2,7 @@
 
 import type { Node } from 'react';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 type Props = {
   pair: string,
@@ -33,11 +34,26 @@ export default class Dot extends React.Component<Props, State> {
     height: 50,
   };
 
+  static contextTypes = {
+    setRef: PropTypes.func,
+  };
+
+  static childContextTypes = {
+    setRef: PropTypes.func,
+  };
+
   state: State = {
     ready: false,
   };
+
   props: Props;
   _instance: HTMLElement;
+
+  getChildContext () {
+    return {
+      setRef: this.supplyRef,
+    };
+  }
 
   componentDidMount () {
     const store = PAIR_STORE[this.props.pair] || [];
@@ -105,6 +121,9 @@ export default class Dot extends React.Component<Props, State> {
   }
 
   supplyRef = (ref: HTMLElement) => {
+    if (this.context.setRef) {
+      this.context.setRef(ref);
+    }
     this._instance = ref;
   };
 
@@ -115,13 +134,16 @@ export default class Dot extends React.Component<Props, State> {
   };
 
   render () {
+    const children = this.props.children.type === Dot
+      ? this.props.children
+      : React.cloneElement(this.props.children, {
+        ref: this.supplyRef,
+      });
+
     return (
       <span>
         {this.drawConnector()}
-
-        {React.cloneElement(this.props.children, {
-          ref: this.supplyRef,
-        })}
+        {children}
       </span>
     );
   }

@@ -29,6 +29,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "prop-types": "^15.6.0",
     "react": "^15.6.1"
   },
   "devDependencies": {

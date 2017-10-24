@@ -27,16 +27,20 @@ const MultiLineApp = () => (
     </Dot>
 
     <div>
-      <Dot pair="bc" connector={(props) => <MyComponent {...props} />}>
-        <Dot pair="ab" connector={(props) => <MyComponent {...props} />}>
-          <div className="child">2</div>
+      <Dot pair="bd" connector={(props) => <MyComponent {...props} />}>
+        <Dot pair="bc" connector={(props) => <MyComponent {...props} />}>
+          <Dot pair="ab">
+            <div className="child">2</div>
+          </Dot>
         </Dot>
       </Dot>
 
-      <div className="child">3</div>
+      <Dot pair="bd">
+        <div className="child">3</div>
+      </Dot>
     </div>
 
-    <Dot pair="bc" connector={(props) => <MyComponent {...props} />}>
+    <Dot pair="bc">
       <div className="child">4</div>
     </Dot>
   </div>
