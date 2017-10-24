@@ -70,15 +70,6 @@ export default class Dot extends React.Component<Props, State> {
     }
   }
 
-  componentWillUnmount () {
-    PAIR_STORE[this.props.pair] = PAIR_STORE[this.props.pair]
-      .filter((func) => func !== this.calculatePosition);
-
-    if (PAIR_STORE[this.props.pair].length === 0) {
-      delete PAIR_STORE[this.props.pair];
-    }
-  }
-
   waitToDrawConnector () {
     requestAnimationFrame(() => {
       const store = PAIR_STORE[this.props.pair];
@@ -139,7 +130,7 @@ export default class Dot extends React.Component<Props, State> {
   calculatePosition = () => {
     const { top, left, width, height } = this._instance.getBoundingClientRect();
 
-    return { top: top + width / 2, left: left + height / 2 };
+    return { top: top + height / 2, left: left + width / 2 };
   };
 
   render () {
