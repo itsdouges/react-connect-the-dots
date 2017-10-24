@@ -1,6 +1,6 @@
 {
   "name": "react-connect-the-dots",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Dynamically positions a connector between two React components.",
   "repository": {
     "type": "git",
