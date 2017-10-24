@@ -1,54 +1,53 @@
-// @flow
-
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import Dot from '../src';
-// $FlowFixMe
 import 'style-loader!css-loader!./styles.css';
 
 const MyComponent = (props) => <div {...props} className="connector-simple" />;
 
-const SingleLineApp = () => (
+const SingleLineApp = ({ dynamic }) => (
   <div className="root">
     <Dot pair="ab" connector={(props) => <MyComponent {...props} />}>
-      <div className="child">1</div>
+      <div className={`child${dynamic ? ' dynamic' : ''}`}>1</div>
     </Dot>
 
     <Dot pair="ab">
-      <div className="child move-top">2</div>
+      <div className={`child move-top${dynamic ? ' dynamic' : ''}`}>2</div>
     </Dot>
   </div>
 );
 
-const MultiLineApp = () => (
+const MultiLineApp = ({ dynamic }) => (
   <div className="root">
 
     <Dot pair="ab" connector={(props) => <MyComponent {...props} />}>
-      <div className="child">1</div>
+      <div className={`child${dynamic ? ' dynamic' : ''}`}>1</div>
     </Dot>
 
     <div>
       <Dot pair="bd" connector={(props) => <MyComponent {...props} />}>
         <Dot pair="bc" connector={(props) => <MyComponent {...props} />}>
           <Dot pair="ab">
-            <div className="child">2</div>
+            <div className={`child${dynamic ? ' dynamic' : ''}`}>2</div>
           </Dot>
         </Dot>
       </Dot>
 
       <Dot pair="bd">
-        <div className="child">3</div>
+        <div className={`child${dynamic ? ' dynamic' : ''}`}>3</div>
       </Dot>
     </div>
 
     <Dot pair="bc">
-      <div className="child">4</div>
+      <div className={`child${dynamic ? ' dynamic' : ''}`}>4</div>
     </Dot>
   </div>
 );
 
 storiesOf('Dot/Single', module)
-  .add('static', () => <SingleLineApp />);
+  .add('static', () => <SingleLineApp />)
+  .add('dynamic', () => <SingleLineApp dynamic />);
 
 storiesOf('Dot/Multi', module)
-  .add('static', () => <MultiLineApp />);
+  .add('static', () => <MultiLineApp />)
+  .add('dynamic', () => <MultiLineApp dynamic />);

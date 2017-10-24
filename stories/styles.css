@@ -4,7 +4,6 @@ body {
 
 .root {
   display: flex;
-  padding: 100px;
   position: relative;
   align-items: center;
 }
@@ -23,4 +22,8 @@ body {
 
 .connector-simple {
   background-color: red;
+}
+
+.dynamic {
+  margin: 20vw 10vw;
 }

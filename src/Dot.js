@@ -29,6 +29,11 @@ function calculateHypotenuse ({ width, height }) {
   };
 }
 
+const addEvent = (eventName, cb) => {
+  window.addEventListener(eventName, cb, false);
+  return () => window.removeEventListener(eventName, cb, false);
+};
+
 export default class Dot extends React.Component<Props, State> {
   static defaultProps = {
     height: 50,
@@ -67,6 +72,11 @@ export default class Dot extends React.Component<Props, State> {
 
     if (this.props.connector) {
       this.waitToDrawConnector();
+      this.removeEvent = addEvent('resize', () => {
+        if (this.state.ready) {
+          this.setState({});
+        }
+      });
     }
   }
 
@@ -118,6 +128,8 @@ export default class Dot extends React.Component<Props, State> {
     if (PAIR_STORE[this.props.pair].length === 0) {
       delete PAIR_STORE[this.props.pair];
     }
+
+    this.removeEvent && this.removeEvent();
   }
 
   supplyRef = (ref: HTMLElement) => {
