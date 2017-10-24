@@ -16,12 +16,16 @@ type State = {
 
 const PAIR_STORE = {};
 
-export function calculateHypotenuse ({ width, height }: Dimensions) {
+function calculateHypotenuse ({ width, height }) {
   const x2 = width ** 2;
   const y2 = height ** 2;
 
   const hypotenuse = Math.sqrt(x2 + y2);
-  return Math.ceil(hypotenuse);
+
+  return {
+    hypotenuse: Math.ceil(hypotenuse),
+    deg: (Math.atan(height / width) * 180) / Math.PI,
+  };
 }
 
 export default class Dot extends React.Component<Props, State> {
@@ -38,7 +42,7 @@ export default class Dot extends React.Component<Props, State> {
   componentDidMount () {
     const store = PAIR_STORE[this.props.pair] || [];
     if (store.length === 2) {
-      throw new Error('Only a pair of two can exist.');
+      throw new Error('>> A named pair can only have two dots.');
     }
 
     store.push(this.calculatePosition);
@@ -69,18 +73,14 @@ export default class Dot extends React.Component<Props, State> {
       return null;
     }
 
-    const [startFunc, endFunc] = PAIR_STORE[this.props.pair];
-    const start = startFunc();
-    const end = endFunc();
+    const [calcStart, calcEnd] = PAIR_STORE[this.props.pair];
+    const start = calcStart();
+    const end = calcEnd();
 
     const x = end.left - start.left;
-    const y = start.top - end.top;
+    const y = end.top - start.top;
 
-    console.log(start, end);
-    console.log(x, y);
-
-    const width = calculateHypotenuse({ width: x, height: y });
-    const rotation = Math.tan(y / x);
+    const { hypotenuse, deg } = calculateHypotenuse({ width: x, height: y });
 
     const style = {
       position: 'absolute',
@@ -88,8 +88,8 @@ export default class Dot extends React.Component<Props, State> {
       top: start.top - this.props.height / 2,
       height: this.props.height,
       transformOrigin: 'left',
-      width,
-      transform: `rotate(${rotation}deg)`,
+      width: hypotenuse,
+      transform: `rotate(${deg}deg)`,
     };
 
     return this.props.connector && this.props.connector({ style });
@@ -111,14 +111,17 @@ export default class Dot extends React.Component<Props, State> {
   calculatePosition = () => {
     const { top, left, width, height } = this._instance.getBoundingClientRect();
 
-    return { top: top + height / 2, left: left + width / 2 };
+    return { top: top + width / 2, left: left + height / 2 };
   };
 
   render () {
     return (
-      <span ref={this.supplyRef}>
+      <span>
         {this.drawConnector()}
-        {this.props.children}
+
+        {React.cloneElement(this.props.children, {
+          ref: this.supplyRef,
+        })}
       </span>
     );
   }

@@ -21,12 +21,24 @@ const SingleLineApp = ({ double }: { double?: boolean }) => (
 
 const MultiLineApp = () => (
   <div className="root">
-    <div className="child">1</div>
+
+    <Dot pair="ab" connector={(props) => <MyComponent {...props} />}>
+      <div className="child">1</div>
+    </Dot>
+
     <div>
-      <div className="child">2</div>
+      <Dot pair="bc" connector={(props) => <MyComponent {...props} />}>
+        <Dot pair="ab" connector={(props) => <MyComponent {...props} />}>
+          <div className="child">2</div>
+        </Dot>
+      </Dot>
+
       <div className="child">3</div>
     </div>
-    <div className="child">4</div>
+
+    <Dot pair="bc" connector={(props) => <MyComponent {...props} />}>
+      <div className="child">4</div>
+    </Dot>
   </div>
 );
 
