@@ -6,7 +6,7 @@
 [![codecov](https://codecov.io/gh/madou/react-connect-the-dots/branch/master/graph/badge.svg)](https://codecov.io/gh/madou/react-connect-the-dots)
 [![Dependency Status](http://img.shields.io/david/madou/react-connect-the-dots.svg?style=flat-square)](https://david-dm.org/madou/react-connect-the-dots)
 
-Positions an element between components. Wrap a from and to component, give them a pair name, and customise the line as you see fit.
+Positions an component `connector` between two components. Wrap a from and to component, give them a pair name, and customise the line as you see fit.
 Explicitly a client side _only_ solution.
 
 <p align="center">
@@ -24,8 +24,8 @@ npm install react-connect-the-dots
 ```javascript
 import Dot from 'react-connect-the-dots';
 
-const CustomComponent = ({ supplyRef, ...props }) => (
-  <div {...props} ref={supplyRef}>hello</div>
+const CustomComponent = () => (
+  <div>hello</div>
 );
 
 const App = () => (
@@ -50,33 +50,25 @@ const App = () => (
 
 ### `<Dot />`
 
-Should wrap a component where you want a dot to be.
-Each dot pair should have only **two** components.
-A dot can wrap multiple components. Will pass down extra props,
-so make sure to assign all overflow props to the raw DOM root element.
-
-IMPORTANT: If using a custom component, make sure to set `ref` to the passed
-down `supplyRef` function.
+You can wrap components in a `Dot` to draw a connector between them.
+Each connector `pair` should only have two `Dots`, if you try to add
+more an exception will be thrown.
 
 ```javascript
-<Dot pair="a-b" connector={(props) => <div className="sweet-line" {...props} />}>
-  <CustomComponent className="position-bottom-right" />
-</Dot>
+import Dot from 'react-connect-the-dots';
+
+const App = () => (
+  <Dot pair="a-b" connector={(props) => <div className="sweet-line" {...props} />}>
+    <CustomComponent className="position-bottom-right" />
+  </Dot>
+);
 ```
 
 | prop | type | required | description |
 |-|-|-|-|
-| children | Children  | yes | |
-| pair | string  | yes | The name that each dot pair will share. |
-| connector | () => React$Class | no | The connect(or) to be drawn between dots, make sure to spread the props to the root DOM element. |
-
-## Troulbeshooting
-
-If no lines are being drawn, one of two things is probably happening.
-
-### Raw DOM element isn't recieving the ref func
-
-### No `connector` is set
+| pair | `string`  | yes | The name that each dot pair will share. |
+| connector | () => `Node` | no | The connector to be drawn between dots. This can be on all, one, or none for a `Dot` pair. |
+| children | `Children`  | yes | |
 
 ### React Story Book
 
