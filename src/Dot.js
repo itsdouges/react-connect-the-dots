@@ -70,6 +70,15 @@ export default class Dot extends React.Component<Props, State> {
     }
   }
 
+  componentWillUnmount () {
+    PAIR_STORE[this.props.pair] = PAIR_STORE[this.props.pair]
+      .filter((func) => func !== this.calculatePosition);
+
+    if (PAIR_STORE[this.props.pair].length === 0) {
+      delete PAIR_STORE[this.props.pair];
+    }
+  }
+
   waitToDrawConnector () {
     requestAnimationFrame(() => {
       const store = PAIR_STORE[this.props.pair];
