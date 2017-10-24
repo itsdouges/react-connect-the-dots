@@ -26,7 +26,7 @@
     "version": "version-changelog CHANGELOG.md && changelog-verify CHANGELOG.md && git add CHANGELOG.md",
     "postversion": "git push && git push --tags",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "rm -rf docs && build-storybook --output-dir docs"
   },
   "dependencies": {
     "prop-types": "^15.6.0",
