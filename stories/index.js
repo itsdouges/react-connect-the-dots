@@ -8,7 +8,7 @@ const MyComponent = (props) => <div {...props} className="connector-simple" />;
 const SingleLineApp = ({ dynamic }) => (
   <div className="root">
     <Dot pair="ab" connector={(props) => <MyComponent {...props} />}>
-      {(ref) => <div className={`child${dynamic ? ' dynamic' : ''}`} ref={ref}>1</div>}
+      {(ref) => <div><div><div className={`child${dynamic ? ' dynamic' : ''}`} ref={ref}>1</div></div></div>}
     </Dot>
 
     <Dot pair="ab">
@@ -46,6 +46,7 @@ const MultiLineApp = ({ dynamic }) => (
 
 storiesOf('Dot/Single', module)
   .add('static', () => <SingleLineApp />)
+  .add('page margin', () => <div className="margin"><SingleLineApp /></div>)
   .add('dynamic', () => <SingleLineApp dynamic />);
 
 storiesOf('Dot/Multi', module)

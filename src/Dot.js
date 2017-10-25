@@ -140,9 +140,9 @@ export default class Dot extends React.Component<Props, State> {
   };
 
   calculatePosition = () => {
-    const { top, left, width, height } = this._instance.getBoundingClientRect();
+    const { offsetTop, offsetLeft, offsetWidth, offsetHeight } = this._instance;
 
-    return { top: top + height / 2, left: left + width / 2 };
+    return { top: offsetTop + offsetHeight / 2, left: offsetLeft + offsetWidth / 2 };
   };
 
   render () {
