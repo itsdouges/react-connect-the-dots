@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][]
+### Removed
+- Nested children handling, not a great idea
 
 ## [0.1.1][] - 2017-10-24
 ### Fixed

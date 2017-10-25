@@ -33,18 +33,6 @@ const addEvent = (eventName, cb) => {
   return () => window.removeEventListener(eventName, cb, false);
 };
 
-const findFirstNativeNode = (node) => {
-  if (typeof node.type === 'string') {
-    return node;
-  }
-
-  if (node.props.children) {
-    return node.props.children;
-  }
-
-  throw new Error('Could not find node to attach ref to.');
-};
-
 export default class Dot extends React.Component<Props, State> {
   static defaultProps = {
     height: 50,
@@ -160,7 +148,7 @@ export default class Dot extends React.Component<Props, State> {
   render () {
     const children = this.props.children.type === Dot
       ? this.props.children
-      : React.cloneElement(findFirstNativeNode(this.props.children), {
+      : React.cloneElement(this.props.children, {
         ref: this.supplyRef,
       });
 
