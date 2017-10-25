@@ -21,54 +21,46 @@ npm install react-connect-the-dots
 
 ## Usage
 
-```javascript
-import Dot from 'react-connect-the-dots';
-
-const CustomComponent = () => (
-  <div>hello</div>
-);
-
-const App = () => (
-  <div className="relative-position-container">
-
-    <Dot pair="a-b" connector={(props) => <div className="sweet-line" {...props} />}>
-      <CustomComponent className="position-top-left" />
-    </Dot>
-
-    <Dot pair="b-c" connector={(props) => <div className="sweet-line thicc" {...props} />}>
-      <Dot pair="a-b">
-        <CustomComponent className="position-bottom-right" />
-      </Dot>
-    </Dot>
-
-    <Dot pair="b-c">
-      <CustomComponent className="position-bottom-right" />
-    </Dot>
-  </div>
-);
-```
-
 ### `<Dot />`
 
 You can wrap components in a `Dot` to draw a connector between them.
 Each connector `pair` should only have two `Dots`, if you try to add
 more an exception will be thrown.
 
+`Dot`s can be nested! Only the deepest `Dot` needs a function as children.
+
 ```javascript
 import Dot from 'react-connect-the-dots';
 
+const CustomComponent = ({ getRef }) => (
+  <div ref={getRef}>hello</div>
+);
+
 const App = () => (
-  <Dot pair="a-b" connector={(props) => <div className="sweet-line" {...props} />}>
-    <CustomComponent className="position-bottom-right" />
-  </Dot>
+  <div className="relative-position-container">
+
+    <Dot pair="a-b" connector={(props) => <div className="sweet-line" {...props} />}>
+      {(ref) => <CustomComponent className="position-top-left" getRef={ref} />}
+    </Dot>
+
+    <Dot pair="b-c" connector={(props) => <div className="sweet-line thicc" {...props} />}>
+      <Dot pair="a-b">
+        {(ref) => <CustomComponent className="position-bottom-left" getRef={ref} />}
+      </Dot>
+    </Dot>
+
+    <Dot pair="b-c">
+      {(ref) => <CustomComponent className="position-bottom-right" getRef={ref} />}
+    </Dot>
+  </div>
 );
 ```
 
 | prop | type | required | description |
 |-|-|-|-|
 | pair | `string`  | yes | The name that each dot pair will share. |
-| connector | () => `Node` | no | The connector to be drawn between dots. This can be on all, one, or none for a `Dot` pair. |
-| children | `Children`  | yes | |
+| connector | `(props) => Node` | no | The connector to be drawn between dots. This can be on all, one, or none for a `Dot` pair. |
+| children | `(ref) => Node` or `Dot` | yes | |
 
 ### React Story Book
 

@@ -8,11 +8,11 @@ const MyComponent = (props) => <div {...props} className="connector-simple" />;
 const SingleLineApp = ({ dynamic }) => (
   <div className="root">
     <Dot pair="ab" connector={(props) => <MyComponent {...props} />}>
-      <div className={`child${dynamic ? ' dynamic' : ''}`}>1</div>
+      {(ref) => <div className={`child${dynamic ? ' dynamic' : ''}`} ref={ref}>1</div>}
     </Dot>
 
     <Dot pair="ab">
-      <div className={`child move-top${dynamic ? ' dynamic' : ''}`}>2</div>
+      {(ref) => <div className={`child move-top${dynamic ? ' dynamic' : ''}`} ref={ref}>1</div>}
     </Dot>
   </div>
 );
@@ -21,25 +21,25 @@ const MultiLineApp = ({ dynamic }) => (
   <div className="root">
 
     <Dot pair="ab" connector={(props) => <MyComponent {...props} />}>
-      <div className={`child${dynamic ? ' dynamic' : ''}`}>1</div>
+      {(ref) => <div className={`child${dynamic ? ' dynamic' : ''}`} ref={ref}>1</div>}
     </Dot>
 
     <div>
       <Dot pair="bd" connector={(props) => <MyComponent {...props} />}>
         <Dot pair="bc" connector={(props) => <MyComponent {...props} />}>
           <Dot pair="ab">
-            <div className={`child${dynamic ? ' dynamic' : ''}`}>2</div>
+            {(ref) => <div className={`child${dynamic ? ' dynamic' : ''}`} ref={ref}>1</div>}
           </Dot>
         </Dot>
       </Dot>
 
       <Dot pair="bd">
-        <div className={`child${dynamic ? ' dynamic' : ''}`}>3</div>
+        {(ref) => <div className={`child${dynamic ? ' dynamic' : ''}`} ref={ref}>1</div>}
       </Dot>
     </div>
 
     <Dot pair="bc">
-      <div className={`child${dynamic ? ' dynamic' : ''}`}>4</div>
+      {(ref) => <div className={`child${dynamic ? ' dynamic' : ''}`} ref={ref}>1</div>}
     </Dot>
   </div>
 );

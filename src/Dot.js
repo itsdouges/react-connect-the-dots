@@ -148,9 +148,7 @@ export default class Dot extends React.Component<Props, State> {
   render () {
     const children = this.props.children.type === Dot
       ? this.props.children
-      : React.cloneElement(this.props.children, {
-        ref: this.supplyRef,
-      });
+      : this.props.children(this.supplyRef);
 
     return (
       <span>

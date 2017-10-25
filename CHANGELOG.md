@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][]
+### Changed
+- Children to be children as function to supply the ref to `Dot`
 
 ## [0.1.2][] - 2017-10-25
 ### Removed
