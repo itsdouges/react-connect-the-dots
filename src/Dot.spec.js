@@ -3,6 +3,6 @@ import Dot from './';
 
 describe('<Dot />', () => {
   it('should render', () => {
-    shallow(<Dot pair="ab"><div /></Dot>);
+    shallow(<Dot pair="ab">{(ref) => <div ref={ref} />}</Dot>);
   });
 });
