@@ -57,16 +57,55 @@ export default class Dot extends React.Component<Props, State> {
   }
 
   componentDidMount () {
-    const store = PAIR_STORE[this.props.pair] || [];
+    this.initialize(this.props);
+  }
+
+  componentWillReceiveProps (nextProps: Props) {
+    if (nextProps.pair !== this.props.pair) {
+      this.cleanup(nextProps);
+      this.setState({ ready: false });
+      this.initialize(nextProps);
+    }
+  }
+
+  componentWillUnmount () {
+    this.cleanup(this.props);
+  }
+
+  props: Props;
+  _instance: HTMLElement;
+  removeEvent: ?Function;
+
+  cleanup (props: Props) {
+    const { pair } = props;
+    if (PAIR_STORE[pair]) {
+      PAIR_STORE[pair] = PAIR_STORE[pair]
+        .filter((func) => func === this.calculatePosition);
+
+      if (PAIR_STORE[pair].length === 0) {
+        delete PAIR_STORE[pair];
+      }
+    }
+
+    this.removeEvent && this.removeEvent();
+  }
+
+  initialize (props: Props) {
+    const { pair, connector } = props;
+    const store = PAIR_STORE[pair] || [];
     if (store.length === 2) {
-      throw new Error('>> A named pair can only have two dots.');
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('>> A <Dot /> pair can only have two dots in a pair.');
+        console.warn('>> This <Dot /> will function as a no-op.');
+      }
+      return;
     }
 
     store.push(this.calculatePosition);
 
-    PAIR_STORE[this.props.pair] = store;
+    PAIR_STORE[pair] = store;
 
-    if (this.props.connector) {
+    if (connector) {
       this.waitToDrawConnector();
       this.removeEvent = addEvent('resize', () => {
         if (this.state.ready) {
@@ -75,21 +114,6 @@ export default class Dot extends React.Component<Props, State> {
       });
     }
   }
-
-  componentWillUnmount () {
-    PAIR_STORE[this.props.pair] = PAIR_STORE[this.props.pair]
-      .filter((func) => func === this.calculatePosition);
-
-    if (PAIR_STORE[this.props.pair].length === 0) {
-      delete PAIR_STORE[this.props.pair];
-    }
-
-    this.removeEvent && this.removeEvent();
-  }
-
-  props: Props;
-  _instance: HTMLElement;
-  removeEvent: ?Function;
 
   waitToDrawConnector () {
     requestAnimationFrame(() => {

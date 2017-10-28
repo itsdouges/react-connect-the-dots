@@ -44,9 +44,58 @@ const MultiLineApp = ({ dynamic }) => (
   </div>
 );
 
+class ChangingDots extends React.Component {
+  state = {
+    flip: false,
+  };
+
+  componentDidMount () {
+    const intervalId = setInterval(() => {
+      this.setState((prevState) => ({
+        flip: !prevState.flip,
+      }));
+    }, 1000);
+
+    this.clean = () => clearInterval(intervalId);
+  }
+
+  componentWillUnmount () {
+    this.clean();
+  }
+
+  render () {
+    const pair = this.state.flip ? 'ab' : 'ac';
+
+    const pairA = [
+      <Dot key="dotab" pair="ab" connector={(props) => <MyComponent {...props} />}>
+        {(ref) => <div><div><div className="child" ref={ref}>2</div></div></div>}
+      </Dot>,
+      <div key="ab"><div><div className="child">3</div></div></div>,
+    ];
+
+    const pairB = [
+      <div key="b"><div><div className="child">2</div></div></div>,
+      <Dot key="dotac" pair="ac" connector={(props) => <MyComponent {...props} />}>
+        {(ref) => <div><div><div className="child" ref={ref}>3</div></div></div>}
+      </Dot>,
+    ];
+
+    return (
+      <div className="root">
+        <Dot pair={pair}>
+          {(ref) => <div className="child" ref={ref}>1</div>}
+        </Dot>
+
+        {this.state.flip ? pairA : pairB}
+      </div>
+    );
+  }
+}
+
 storiesOf('Dot/Single', module)
   .add('static', () => <SingleLineApp />)
   .add('page margin', () => <div className="margin"><SingleLineApp /></div>)
+  .add('updating positions', () => <ChangingDots />)
   .add('dynamic', () => <SingleLineApp dynamic />);
 
 storiesOf('Dot/Multi', module)
