@@ -8,11 +8,11 @@ const MyComponent = (props) => <div {...props} className="connector-simple" />;
 const SingleLineApp = ({ dynamic }) => (
   <div className="root">
     <Dot pair="ab" connector={(props) => <MyComponent {...props} />}>
-      {(ref) => <div><div><div className={`child${dynamic ? ' dynamic' : ''}`} ref={ref}>1</div></div></div>}
+      {(ref) => <div><div><div className={`child${dynamic ? ' dynamic' : ''}`} ref={ref}>start</div></div></div>}
     </Dot>
 
     <Dot pair="ab">
-      {(ref) => <div className={`child move-top${dynamic ? ' dynamic' : ''}`} ref={ref}>1</div>}
+      {(ref) => <div className={`child move-top${dynamic ? ' dynamic' : ''}`} ref={ref}>end</div>}
     </Dot>
   </div>
 );
@@ -64,29 +64,55 @@ class ChangingDots extends React.Component {
   }
 
   render () {
-    const pair = this.state.flip ? 'ab' : 'ac';
-
     const pairA = [
-      <Dot key="dotab" pair="ab" connector={(props) => <MyComponent {...props} />}>
-        {(ref) => <div><div><div className="child" ref={ref}>2</div></div></div>}
-      </Dot>,
-      <div key="ab"><div><div className="child">3</div></div></div>,
+      <div key="bb"><div><div className="child">2</div></div></div>,
+      <div key="dotac"><div><div className="child move-top">end</div></div></div>,
     ];
 
     const pairB = [
       <div key="b"><div><div className="child">2</div></div></div>,
-      <Dot key="dotac" pair="ac" connector={(props) => <MyComponent {...props} />}>
-        {(ref) => <div><div><div className="child" ref={ref}>3</div></div></div>}
+      <Dot key="c" pair="ac" connector={(props) => <MyComponent {...props} />}>
+        {(ref) => <div><div><div className="child move-top" ref={ref}>end</div></div></div>}
       </Dot>,
     ];
 
     return (
       <div className="root">
-        <Dot pair={pair}>
-          {(ref) => <div className="child" ref={ref}>1</div>}
+        <Dot pair="ac">
+          {(ref) => <div className="child" ref={ref}>start</div>}
         </Dot>
 
         {this.state.flip ? pairA : pairB}
+      </div>
+    );
+  }
+}
+
+class PostMountApp extends React.Component {
+  state = {
+    flip: false,
+  };
+
+  componentDidMount () {
+    setTimeout(() => {
+      this.setState((prevState) => ({
+        flip: !prevState.flip,
+      }));
+    }, 1000);
+  }
+
+  render () {
+    return (
+      <div className="root">
+        {this.state.flip && (
+          <Dot pair="da-pair">
+            {(ref) => <div className="child" ref={ref}>start</div>}
+          </Dot>
+        )}
+
+        <Dot pair="da-pair" connector={(props) => <MyComponent {...props} />}>
+          {(ref) => <div className="child" ref={ref}>end</div>}
+        </Dot>
       </div>
     );
   }
@@ -97,6 +123,9 @@ storiesOf('Dot/Single', module)
   .add('page margin', () => <div className="margin"><SingleLineApp /></div>)
   .add('updating positions', () => <ChangingDots />)
   .add('dynamic', () => <SingleLineApp dynamic />);
+
+storiesOf('Dot/EdgeCases', module)
+  .add('end gets mounted first', () => <PostMountApp />);
 
 storiesOf('Dot/Multi', module)
   .add('static', () => <MultiLineApp />)

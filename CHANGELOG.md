@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][]
+### Fixed
+- Dots that have their end node appear before their start node
 
 ## [0.4.0][] - 2017-10-29
 ### Changed

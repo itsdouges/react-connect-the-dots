@@ -117,7 +117,9 @@ export default class Dot extends React.Component<Props, State> {
 
   waitToDrawConnector () {
     requestAnimationFrame(() => {
-      const store = PAIR_STORE[this.props.pair];
+      const { pair } = this.props;
+
+      const store = PAIR_STORE[pair];
       if (store.length === 2) {
         this.setState({
           ready: true,
@@ -130,13 +132,32 @@ export default class Dot extends React.Component<Props, State> {
   }
 
   drawConnector () {
-    if (!this.state.ready || !this.props.connector) {
+    const { pair, connector, height } = this.props;
+
+    if (!this.state.ready || !connector) {
       return null;
     }
 
-    const [calcStart, calcEnd] = PAIR_STORE[this.props.pair];
-    const start = calcStart();
-    const end = calcEnd();
+    const [calcStart, calcEnd] = PAIR_STORE[pair];
+
+    const first = calcStart();
+    const second = calcEnd();
+
+    if (!first || !second) {
+      return null;
+    }
+
+    let start;
+    let end;
+
+    // We want the start node to be the one that is more left.
+    if (first.left < second.left) {
+      start = first;
+      end = second;
+    } else {
+      start = second;
+      end = first;
+    }
 
     const x = end.left - start.left;
     const y = end.top - start.top;
@@ -146,14 +167,14 @@ export default class Dot extends React.Component<Props, State> {
     const style = {
       position: 'absolute',
       left: start.left,
-      top: start.top - this.props.height / 2,
-      height: this.props.height,
+      top: start.top - height / 2,
+      height,
       transformOrigin: 'left',
       width: hypotenuse,
       transform: `rotate(${deg}deg)`,
     };
 
-    return this.props.connector({ style });
+    return connector({ style });
   }
 
   supplyRef = (ref: any) => {
@@ -164,6 +185,10 @@ export default class Dot extends React.Component<Props, State> {
   };
 
   calculatePosition = () => {
+    if (!this._instance) {
+      return undefined;
+    }
+
     const { offsetTop, offsetLeft, offsetWidth, offsetHeight } = this._instance;
 
     return { top: offsetTop + offsetHeight / 2, left: offsetLeft + offsetWidth / 2 };
